@@ -25,9 +25,10 @@ namespace WebDiaryAPI.Controllers
 
 
         [HttpGet("{id}")]
-        public ActionResult<DiaryEntry> GetDiaryEntry(int id)
+        public async Task<ActionResult<DiaryEntry>> GetDiaryEntry(int id)
         {
-            var diaryEntry = _context.DiaryEntries.Find(id);
+            //Database
+            var diaryEntry = await _context.DiaryEntries.FindAsync(id);
 
             if (diaryEntry == null)
             {
