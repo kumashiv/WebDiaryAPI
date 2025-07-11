@@ -50,5 +50,40 @@ namespace WebDiaryAPI.Controllers
             return Created(resourceUrl, diaryEntry);
         }
 
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateDiaryEntry(int id, [FromBody]DiaryEntry diaryEntry)
+        {
+            if (id != diaryEntry.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(diaryEntry).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DIaryEntryExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();     //204 response
+
+        }
+
+
+        private bool DIaryEntryExists(int id)
+        {
+            return _context.DiaryEntries.Any(e => e.Id == id);
+        }
     }
 }
